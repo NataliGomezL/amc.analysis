@@ -1,0 +1,34 @@
+---
+title: "amc.analysis Description"
+author: "Natali Stigler Leguizamo"
+date: "2025-10-05"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#
+
+'amc.analysis' is an R pacakge dedicated to...
+
+## Usage
+
+This is the original data:
+
+```{r cars}
+library(amc.analysis)
+data(mexico_shps)
+```
+
+Step 1: apply function `amc_overlap_analysis()`:
+
+```{r}
+raw_overlap <- amc_overlap_analysis(shps =  mexico_shps,
+                                    id_unit_var = "cvegeo",
+                                    period_var = "year")
+raw_overlap
+```
+
+
