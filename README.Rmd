@@ -9,16 +9,18 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+theme_set(theme_get() + theme(plot.title = element_text(hjust = 0.5),
+                              plot.subtitle = element_text(hjust = 0.5)))
 ```
 
 #
 
-'amc.analysis' is an R pacakge dedicated to...
-
+'amc.analysis' is an R package for standardizing territorial units over time by accounting for boundary changes. The package detects and groups boundary modifications resulting from territorial mergers and splits using overlap analysis methods. It builds on R functions developed by Stigler (2023), which conceptualize overlapping polygons as a network clustering problem—analogous to the “friends of friends” approach in social networks. The resulting clusters, or aggregated mapping units (AMCs), and their corresponding crosswalk tables facilitate longitudinal analyses that require consistent spatial units across time.
 
 ## Installation
 
-To install this pakage, use:
+To install this package, use:
 
 ```{r, eval=FALSE}
 remotes::install_github("NataliGomezL/amc.analysis")
@@ -27,12 +29,26 @@ remotes::install_github("NataliGomezL/amc.analysis")
 
 ## Usage
 
-This is the original data:
+The example is based on the original data from the Mexican state of Campeche, where several municipalities experienced territorial changes between 1995 and 2020
 
-```{r cars}
+```{r plot_territorial_units, out.width="100%", fig.width=8, fig.asp=0.75}
 library(amc.analysis)
+library(ggplot2)
 data(mexico_shps)
+plot <- plot_territorial_units(shps =  mexico_shps,
+                               id_unit_var = "cvegeo",
+                               period_var = "year",
+                               show_legend = FALSE,
+                               show_label = TRUE,
+                               label_size = 2)
+
+plot + theme(text = element_text(size=6.5)) +
+  ggtitle("Overview of raw dataset")+
+  labs(subtitle = "3 years of shapefiles, with changes in territorial units from year to year")
 ```
+
+
+
 
 Step 1: apply function `amc_overlap_analysis()`:
 
