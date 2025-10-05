@@ -20,32 +20,33 @@ plot_territorial_units <- function(shps,
                                    period_var,
                                    show_legend = TRUE,
                                    show_label = FALSE,
-                                   legend_position = "right"){
+                                   legend_position = "right",
+                                   label_size = 3) {
 
-  all_shps <- do.call(rbind, shps) %>% st_as_sf()
+  all_shps <- do.call(rbind, shps) %>% sf::st_as_sf()
 
-  p <- ggplot(all_shps) +
-    geom_sf(aes(fill = .data[[id_unit_var]])) +
-    facet_wrap(vars(!!sym(period_var))) +
-    labs(fill = "Territorial units")
+  p <- ggplot2::ggplot(all_shps) +
+    ggplot2::geom_sf(ggplot2::aes(fill = .data[[id_unit_var]])) +
+    ggplot2::facet_wrap(vars(!!rlang::sym(period_var))) +
+    ggplot2::labs(fill = "Territorial units", x = "", y = "")
 
-
-  if(show_legend){
-    p <- p + theme(legend.position = legend_position)
+  if (show_legend) {
+    p <- p + ggplot2::theme(legend.position = legend_position)
   } else {
-    p <- p + theme(legend.position = "none")
+    p <- p + ggplot2::theme(legend.position = "none")
   }
 
-  if(show_label){
-    p <- p + geom_sf_text(data = st_centroid(all_shps),
-                          aes(label = .data[[id_unit_var]]),
-                          size = 3,
-                          color = "black")
+  if (show_label) {
+    p <- p + ggplot2::geom_sf_text(data = sf::st_point_on_surface(all_shps),
+                                   ggplot2::aes(label = .data[[id_unit_var]]),
+                                   size = label_size,
+                                   color = "black",
+                                   inherit.aes = FALSE,
+                                   check_overlap = TRUE)
   }
 
   p
 }
-
 ###==========================================
 ##
 ###==========================================
@@ -62,19 +63,19 @@ plot_AMC_byP <- function(shps,
 
   p <- ggplot() +
     # polygon layer (territorial units)
-    geom_sf(data = all_shps, aes(fill = .data[[id_unit_var]]), color = NA) +
+    ggplot2::geom_sf(data = all_shps, aes(fill = .data[[id_unit_var]]), color = NA) +
     # black boundary AMCs
-    geom_sf(data = amc_df, aes(color = "AMC borders"), fill = NA, lwd = 1, show.legend = "line") +
-    geom_sf_text(data = st_point_on_surface(all_shps), aes(label = .data[[id_unit_var]]), size = 3, color = "black") +
-    facet_wrap(vars(!!sym(period_var))) +
-    scale_color_manual(values = c("AMC borders" = "black"), name = NULL) +
-    labs(fill = "Territorial units",
-         x = "",
-         y = "") +
-    guides(fill  = guide_legend(override.aes = list(colour = NA)),
-           color = guide_legend(order = 1),
-           fill  = guide_legend(order = 2)) +
-    theme(legend.position = if (show_legend) legend_position else "none")
+    ggplot2::geom_sf(data = amc_df, aes(color = "AMC borders"), fill = NA, lwd = 1, show.legend = "line") +
+    ggplot2::geom_sf_text(data = st_point_on_surface(all_shps), aes(label = .data[[id_unit_var]]), size = 3, color = "black") +
+    ggplot2::facet_wrap(vars(!!sym(period_var))) +
+    ggplot2::scale_color_manual(values = c("AMC borders" = "black"), name = NULL) +
+    ggplot2::labs(fill = "Territorial units",
+                  x = "",
+                  y = "") +
+    ggplot2::guides(fill  = guide_legend(override.aes = list(colour = NA)),
+                    color = guide_legend(order = 1),
+                    fill  = guide_legend(order = 2)) +
+    ggplot2::theme(legend.position = if (show_legend) legend_position else "none")
 
   p
 
