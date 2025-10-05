@@ -31,10 +31,12 @@ use_import_from("ggplot2", "xlab")
 use_import_from("ggplot2", "ggplot")
 use_import_from("ggplot2", "geom_histogram")
 use_import_from("ggplot2", "labs")
-
+use_import_from("ggplot2", "geom_sf")
+use_import_from("ggplot2", "theme")
+use_import_from("ggplot2", "geom_sf_text")
 
 ### git
-use_git(message = "Initial commit")
+# use_git(message = "Initial commit")
 
 
 ## tests
