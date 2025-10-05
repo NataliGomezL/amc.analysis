@@ -66,12 +66,12 @@ qck_correct_contiguous <- function(shp) {
 }
 
 ###==========================================
-##' Plot overlap histogram
+## Plot overlap histogram
 ###==========================================
 
 #' Plot overlap histogram
 #'
-
+#'@export
 qck_overlap_histog <- function(df_overlap, bins = 30){
 
   overlap_long <- df_overlap %>%

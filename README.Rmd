@@ -15,6 +15,16 @@ knitr::opts_chunk$set(echo = TRUE)
 
 'amc.analysis' is an R pacakge dedicated to...
 
+
+## Installation
+
+To install this pakage, use:
+
+```{r, eval=FALSE}
+remotes::install_github("NataliGomezL/amc.analysis")
+```
+
+
 ## Usage
 
 This is the original data:

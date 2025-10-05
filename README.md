@@ -13,6 +13,17 @@ output:
 
 'amc.analysis' is an R pacakge dedicated to...
 
+
+## Installation
+
+To install this pakage, use:
+
+
+``` r
+remotes::install_github("NataliGomezL/amc.analysis")
+```
+
+
 ## Usage
 
 This is the original data:

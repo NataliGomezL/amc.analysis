@@ -2,12 +2,10 @@
 % Please edit documentation in R/quality_functions.R
 \name{qck_overlap_histog}
 \alias{qck_overlap_histog}
-\title{Plot overlap histogram
-Plot overlap histogram}
+\title{Plot overlap histogram}
 \usage{
 qck_overlap_histog(df_overlap, bins = 30)
 }
 \description{
-Plot overlap histogram
 Plot overlap histogram
 }
