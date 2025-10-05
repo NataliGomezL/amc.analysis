@@ -6,6 +6,7 @@
 #' @importFrom ggplot2 facet_wrap
 #' @importFrom ggplot2 geom_histogram
 #' @importFrom ggplot2 geom_line
+#' @importFrom ggplot2 geom_sf
 #' @importFrom ggplot2 ggplot
 #' @importFrom ggplot2 ggtitle
 #' @importFrom ggplot2 labs
