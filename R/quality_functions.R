@@ -51,12 +51,10 @@ qck_check_contiguous <- function(shp){
 #' @export
 qck_correct_contiguous <- function(shp) {
 
-  # Packages
-  library(rmapshaper)
 
   if (inherits(shp, "sf")) {
     # case: one sf
-    return(ms_simplify(shp, keep = 1))
+    return(rmapshaper::ms_simplify(shp, keep = 1))
   }
   if (is.list(shp) && all(vapply(shp, inherits, logical(1L), "sf"))) {
     # case: list de sf
