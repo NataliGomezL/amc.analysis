@@ -1,6 +1,6 @@
 library(usethis)
-create_package("/home/matifou/Dropbox/Documents/Nati/Mat Nat SAM/stanford/AMC/amc.analysis")
-use_mit_license("Natali Stigler")
+# create_package("/home/matifou/Dropbox/Documents/Nati/Mat Nat SAM/stanford/AMC/amc.analysis")
+# use_mit_license("Natali Stigler")
 
 use_package("igraph")
 use_package("dplyr")
@@ -29,6 +29,9 @@ use_import_from("ggplot2", "geom_line")
 use_import_from("ggplot2", "aes")
 use_import_from("ggplot2", "xlab")
 use_import_from("ggplot2", "ggplot")
+use_import_from("ggplot2", "geom_histogram")
+use_import_from("ggplot2", "labs")
+
 
 ### git
 use_git(message = "Initial commit")
