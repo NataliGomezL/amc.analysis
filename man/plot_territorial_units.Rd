@@ -10,7 +10,8 @@ plot_territorial_units(
   period_var,
   show_legend = TRUE,
   show_label = FALSE,
-  legend_position = "right"
+  legend_position = "right",
+  label_size = 3
 )
 }
 \arguments{
