@@ -1,6 +1,6 @@
 Package: amc.analysis
 Title: Synthetic shapefile (AMC) of administrative boundaries with changes over time
-Version: 0.0.0.9000
+Version: 0.0.1.9000
 Authors@R: 
     person("Natali", "Stigler-Leguizamo", email="Natali.Stigler@gmail.com", role = c("aut", "cre"))
 Description: What the package does (one paragraph).

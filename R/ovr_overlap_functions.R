@@ -73,7 +73,7 @@ ovr_get_overlap_pairs <- function(sf, sf2=NULL, id_var = NULL, unit = "m2", pre_
   ## Compute area of intersect
   inter_df_raw <- inter %>%
     filter(.data$row_b!=.data$row_a) %>%
-    mutate(area_inter = st_area(.data$geometry) %>% units::set_units(unit, mode = "standard")) %>%
+    mutate(area_inter = sf::st_area(sf::st_geometry(.))  %>% units::set_units(unit, mode = "standard")) %>%
     sf::st_set_geometry(NULL) %>%
     as_tibble()%>%
     mutate("dyad" = purrr::map2_chr(.data$row_a, .data$row_b, ~paste(sort(c(.x, .y)), collapse = " "))) %>%
@@ -93,7 +93,7 @@ ovr_get_overlap_pairs <- function(sf, sf2=NULL, id_var = NULL, unit = "m2", pre_
   areas_indiv <- sf %>%
     select(id_var_new={{id_var}}) %>%
     filter(.data$id_var_new %in% ids_intersecting) %>%
-    mutate(area = st_area(.data$geometry)%>% units::set_units(unit, mode = "standard"))%>%
+    mutate(area = sf::st_area(sf::st_geometry(.)) %>% units::set_units(unit, mode = "standard"))%>%
     sf::st_set_geometry(NULL) %>%
     as_tibble()
 
