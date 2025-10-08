@@ -60,7 +60,7 @@ ovr_get_overlap_pairs <- function(sf, sf2=NULL, id_var = NULL, unit = "m2", pre_
 
   ## get pairwise intersection
   if(!has_sf2) sf2 <- sf
-  inter <- st_intersection(select(sf,row_a = {{id_var}}) %>% st_set_agr("constant"),
+  inter <- st_intersection(select(sf,  row_a = {{id_var}}) %>% st_set_agr("constant"),
                            select(sf2, row_b = {{id_var}}) %>% st_set_agr("constant"))
 
   ##  eventually repair

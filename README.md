@@ -1,6 +1,6 @@
 ---
 title: "amc.analysis Description"
-author: "Natali Stigler Leguizamo"
+author: "Natali Stigler-Leguizamo"
 date: "2025-10-05"
 output:
   html_document:
@@ -38,14 +38,9 @@ plot <- plot_territorial_units(shps =  mexico_shps,
                                show_legend = FALSE,
                                show_label = TRUE,
                                label_size = 2)
-```
 
-```
-## Warning: st_point_on_surface assumes attributes are constant over geometries
-```
-
-``` r
-plot + theme(text = element_text(size=6.5)) +
+plot + 
+  ggplot2::theme(text = element_text(size=6.5)) +
   ggtitle("Overview of raw dataset")+
   labs(subtitle = "3 years of shapefiles, with changes in territorial units from year to year")
 ```

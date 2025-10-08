@@ -1,6 +1,6 @@
 ---
 title: "amc.analysis Description"
-author: "Natali Stigler Leguizamo"
+author: "Natali Stigler-Leguizamo"
 date: "2025-10-05"
 output:
   html_document:
@@ -31,7 +31,7 @@ remotes::install_github("NataliGomezL/amc.analysis")
 
 The example is based on the original data from the Mexican state of Campeche, where several municipalities experienced territorial changes between 1995 and 2020
 
-```{r plot_territorial_units, out.width="100%", fig.width=8, fig.asp=0.75}
+```{r plot_territorial_units, warning=FALSE, out.width="100%", fig.width=8, fig.asp=0.75}
 library(amc.analysis)
 library(ggplot2)
 data(mexico_shps)
@@ -42,7 +42,8 @@ plot <- plot_territorial_units(shps =  mexico_shps,
                                show_label = TRUE,
                                label_size = 2)
 
-plot + theme(text = element_text(size=6.5)) +
+plot + 
+  ggplot2::theme(text = element_text(size=6.5)) +
   ggtitle("Overview of raw dataset")+
   labs(subtitle = "3 years of shapefiles, with changes in territorial units from year to year")
 ```
