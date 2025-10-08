@@ -67,6 +67,22 @@ amc_overlap_analysis <- function(shps,
     stop(paste0("Not all shapefiles share the same CRS. Consider transforming them with st_transform()."))
   }
 
+  ## Check: ensure the shared CRS is projected (not geographic lon/lat)
+  # (1) no missing CRS
+  if (any(vapply(crs, is.na, logical(1)))) {
+    idx <- which(vapply(crs, is.na, logical(1)))
+    stop(paste0("Some shapefiles have no CRS: ",
+                paste(names(shps)[idx], collapse = ", "),
+                ". Set a valid projected CRS (e.g., EPSG:3035, 2056, etc.)."))
+  }
+  # (2) not longitude/latitude
+  is_geographic <- sf::st_is_longlat(crs[[1]])
+  if (is_geographic) {
+    stop(paste0("The CRS is geographic (longitude/latitude). ",
+                "Area calculations require a projected CRS (e.g., EPSG:3035, 3857, 2056). ",
+                "Transform your data with st_transform()."))
+  }
+
   ## now add here the id_unit_year = paste(id_unit_var, period_var)
   shps <- lapply(shps, \(x) mutate(x, period_id = paste0(.data[[period_var]], "_", .data[[id_unit_var]])))
 
