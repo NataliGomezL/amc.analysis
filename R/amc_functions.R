@@ -84,7 +84,8 @@ amc_overlap_analysis <- function(shps,
   }
 
   ## now add here the id_unit_year = paste(id_unit_var, period_var)
-  shps <- lapply(shps, \(x) mutate(x, period_id = paste0(.data[[period_var]], "_", .data[[id_unit_var]])))
+  shps <- lapply(shps, \(x) mutate(x, period_id = paste0(.data[[period_var]], "_", .data[[id_unit_var]])) %>%
+                   select(period_id, all_of(c(period_var, id_unit_var))))
 
   # Create an empty list
   out_list <- list()
