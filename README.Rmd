@@ -16,7 +16,9 @@ theme_set(theme_get() + theme(plot.title = element_text(hjust = 0.5),
 
 #
 
-'amc.analysis' is an R package for standardizing territorial units over time by accounting for boundary changes. The package detects and groups boundary modifications resulting from territorial mergers and splits using overlap analysis methods. It builds on R functions developed by Stigler (2023), which conceptualize overlapping polygons as a network clustering problem—analogous to the “friends of friends” approach in social networks. The resulting clusters, or aggregated mapping units (AMCs), and their corresponding crosswalk tables facilitate longitudinal analyses that require consistent spatial units across time.
+`amc.analysis` is an R package for standardizing territorial units over time by accounting for administrative boundary changes. It automatically detects and groups boundary modifications, such as mergers and splits, using an overlap-based network analysis.
+
+The method conceptualizes overlapping polygons as a clustering problem, similar to the “friends-of-friends” approach in social network analysis. The resulting aggregated mapping units (AMCs) and corresponding crosswalk tables provide a consistent spatial framework for longitudinal or time-series analyses across changing territorial boundaries.
 
 ## Installation
 
@@ -51,13 +53,96 @@ plot +
 
 
 
-Step 1: apply function `amc_overlap_analysis()`:
+## Step 1: apply function `amc_overlap_analysis()`:
 
-```{r}
+```{r create a raw overlap tibble}
 raw_overlap <- amc_overlap_analysis(shps =  mexico_shps,
                                     id_unit_var = "cvegeo",
                                     period_var = "year")
+```
+
+The resulting tibble summarizes pairs of overlapping territorial units, including their identifiers (dyad, row_a, row_b), the intersection and relative area measures (area_inter, area_a, area_b, area_a_overlapped, area_b_overlapped), and the corresponding time periods (year_A, year_B) in which the overlaps occur.
+
+```{r show raw overlap tibble}
 raw_overlap
 ```
 
+
+## Step 2: determine the threshold `amc_compare_threshold()`
+
+Cartographic data often vary in quality, and territorial boundaries, especially those following natural features such as rivers or lakes, may shift slightly over time without representing an actual administrative change. As a result,`amc_overlap_analysis()` may detect numerous spurious overlaps caused by these minor boundary fluctuations.
+
+The function `amc_compare_threshold()` enables users to set a minimum overlap threshold, specifying the percentage of area overlap required to be considered a true territorial change. This helps filter out noise and ensures that only meaningful boundary modifications are retained for further analysis. The function produces a graph and a tibble that allow users to easily identify the number of clusters (AMCs) and the maximum number of units per cluster generated as a function of the selected threshold. 
+
+```{r threshold analysis}
+threshold_table <- amc_compare_threshold(df_overlap = raw_overlap)
+print(threshold_table, n = 14)
+```
+
+## Step 3: Create AMCs `amc_create_amc()`
+
+Once the threshold is defined, use `amc_create_amc()` to aggregate overlapping units and assign an AMC ID to each cluster.
+
+The selected threshold directly influences the final AMC configuration, so it is important to carefully determine an appropriate value. For illustration, the results below compare outcomes for thresholds of 10 and 11:
+
+```{r AMC sf with different thresholds, warning=FALSE, out.width="100%", fig.width=8, fig.asp=0.75}
+# Create AMC (threshold 10%)
+amc_10 <- amc_create_amc(df_overlap = raw_overlap,
+                         shps =  mexico_shps,
+                         threshold = 10,
+                         id_unit_var = "cvegeo",
+                         period_var = "year",
+                         ref_period = 2015)
+
+# Create AMC (threshold 11%)
+amc_11 <- amc_create_amc(df_overlap = raw_overlap,
+                         shps =  mexico_shps,
+                         threshold = 11,
+                         id_unit_var = "cvegeo",
+                         period_var = "year",
+                         ref_period = 2015)
+
+
+# Plot AMC (threshold 10%)
+amc_plot_10 <- plot_AMC_byP(shps=  mexico_shps,
+                            id_unit_var = "cvegeo",
+                            period_var= "year",
+                            amc_df = amc_10,
+                            show_legend = TRUE,
+                            show_label = FALSE,
+                            label_size = 2)
+
+amc_plot_10 + 
+  ggplot2::theme(text = element_text(size=6.5)) +
+  ggtitle("AMC with threshold 10")+
+  labs(subtitle = "Produces only 7 AMC's")
+
+
+# Plot AMC (threshold 11%)
+amc_plot_11 <- plot_AMC_byP(shps=  mexico_shps,
+                            id_unit_var = "cvegeo",
+                            period_var = "year",
+                            amc_df = amc_11,
+                            show_legend = TRUE,
+                            show_label = FALSE,
+                            label_size = 2)
+amc_plot_11 + 
+  ggplot2::theme(text = element_text(size=6.5)) +
+  ggtitle("AMC with threshold 11")+
+  labs(subtitle = "Produces 8 AMC's")
+```
+
+## Step 4: Create a crosswalk table `amc_create_crosswalk()`
+
+Use `amc_create_crosswalk()` to generate a tibble that identifies how each AMC is composed over time in terms of its constituent territorial units, as well as the relative weight that each unit contributes to the AMC.
+
+
+```{r}
+crosswalk <- amc_create_crosswalk(shps = mexico_shps,
+                                  amc_shp = amc_11,
+                                  id_unit_var ="cvegeo",
+                                  period_var = "year",
+                                  threshold = 11)
+print(crosswalk, n=20)
+```
 
