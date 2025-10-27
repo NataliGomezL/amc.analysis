@@ -47,17 +47,21 @@ plot_territorial_units <- function(shps,
 
   p
 }
+
+
 ###==========================================
-##
+## Plot AMC's and territorial units by period
 ###==========================================
 #' @export
 
 plot_AMC_byP <- function(shps,
                          id_unit_var,
                          period_var,
+                         amc_df,
                          show_legend = TRUE,
+                         show_label = FALSE,
                          legend_position = "right",
-                         amc_df) {
+                         label_size = 3) {
 
   all_shps <- do.call(rbind, shps) %>% st_as_sf()
 
@@ -66,7 +70,6 @@ plot_AMC_byP <- function(shps,
     ggplot2::geom_sf(data = all_shps, aes(fill = .data[[id_unit_var]]), color = NA) +
     # black boundary AMCs
     ggplot2::geom_sf(data = amc_df, aes(color = "AMC borders"), fill = NA, lwd = 1, show.legend = "line") +
-    ggplot2::geom_sf_text(data = st_point_on_surface(all_shps), aes(label = .data[[id_unit_var]]), size = 3, color = "black") +
     ggplot2::facet_wrap(vars(!!sym(period_var))) +
     ggplot2::scale_color_manual(values = c("AMC borders" = "black"), name = NULL) +
     ggplot2::labs(fill = "Territorial units",
@@ -74,9 +77,22 @@ plot_AMC_byP <- function(shps,
                   y = "") +
     ggplot2::guides(fill  = guide_legend(override.aes = list(colour = NA)),
                     color = guide_legend(order = 1),
-                    fill  = guide_legend(order = 2)) +
-    ggplot2::theme(legend.position = if (show_legend) legend_position else "none")
+                    fill  = guide_legend(order = 2))
 
+  if (show_legend) {
+    p <- p + ggplot2::theme(legend.position = legend_position)
+  } else {
+    p <- p + ggplot2::theme(legend.position = "none")
+  }
+
+  if (show_label) {
+    p <- p + ggplot2::geom_sf_text(data = sf::st_point_on_surface(all_shps),
+                                   ggplot2::aes(label = .data[[id_unit_var]]),
+                                   size = label_size,
+                                   color = "black",
+                                   inherit.aes = FALSE,
+                                   check_overlap = TRUE)
+  }
   p
 
 }
