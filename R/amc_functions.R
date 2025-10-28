@@ -137,7 +137,8 @@ amc_get_clusters <- function(df_overlap, threshold=NULL){
 #'
 #' @param df_overlap Output of function amc_overlap_analysis()
 #' @export
-amc_compare_threshold <- function(df_overlap, threshold=seq(0, 20, by=1),
+amc_compare_threshold <- function(df_overlap,
+                                  threshold=seq(0, 20, by=1),
                                   plot=TRUE){
 
   ## count units in groups
@@ -156,9 +157,7 @@ amc_compare_threshold <- function(df_overlap, threshold=seq(0, 20, by=1),
 
     ## assemble res
     tibble(n_clusters=n_clusters,
-           # ave_n_units_by_cluster = mean(n_units_by_cluster),
            max_n_units_by_cluster = max(n_units_by_cluster))
-    # tot_units_by_cluster = sum(n_units_by_cluster))
   }
 
   ## compute get_th_stats() on all thesholds
@@ -173,11 +172,10 @@ amc_compare_threshold <- function(df_overlap, threshold=seq(0, 20, by=1),
                  names_to = "variable",
                  values_to = "value")
 
-  ##
+  ## plot
   if(plot){
     plot <- out_res_l %>%
       mutate(variable_clean = case_match(.data$variable,
-                                         # "ave_n_units_by_cluster"~"Average number of units by cluster",
                                          "max_n_units_by_cluster"~ "Maximum number of units by cluster",
                                          "n_clusters"~ "Number of clusters",)) %>%
       # filter(thresh!=0) %>%
@@ -185,9 +183,11 @@ amc_compare_threshold <- function(df_overlap, threshold=seq(0, 20, by=1),
       geom_line()+
       facet_wrap(~variable_clean, ncol=1, scales="free")+
       ggtitle("Effect of threshold on number and size of clusters") +
-      scale_x_continuous(breaks = seq(0, 20, by = 1)) +
-      scale_y_continuous(breaks = scales::breaks_width(1)) +
-      xlab("Threshold")
+      scale_x_continuous(breaks = threshold) +
+      scale_y_continuous(labels = scales::label_number(big.mark = ",")) +
+      xlab("Threshold") +
+      ylab("Value")
+
 
     print(plot)
   }
