@@ -12,7 +12,6 @@
 ##' @param id_var optional variable containing the row identifier
 ##' @param unit the unit in which to report the area
 ##' @param pre_filter whether to run first st_intersects to filter? Recommended as seems
-##' @param inter_make_valid whether to repair potentially invalid values
 ##' @param sf2 NULL. to compare two groups of polygons
 ##' @returns a tibble where each row represents an overlapping A-B dyad, and columns
 ##' indicate the id of the dyad, the area of each polygon, their intersection and percentage of overlap
@@ -23,8 +22,7 @@
 ##' @import units
 ##' @noRd
 
-ovr_get_overlap_pairs <- function(sf, sf2=NULL, id_var = NULL, unit = "m2", pre_filter = TRUE,
-                                  inter_make_valid = FALSE) {
+ovr_get_overlap_pairs <- function(sf, sf2=NULL, id_var = NULL, unit = "m2", pre_filter = TRUE) {
 
   ## add id var if not there
   # id_var <- rlang::quo(ids)
@@ -64,11 +62,7 @@ ovr_get_overlap_pairs <- function(sf, sf2=NULL, id_var = NULL, unit = "m2", pre_
                            select(sf2, row_b = {{id_var}}) %>% st_set_agr("constant"))
 
   ##  eventually repair
-  if(inter_make_valid) {
-    inter <- inter %>%
-      st_make_valid()
-  }
-
+  if(!all(st_is_valid(inter))) inter <- st_make_valid(inter)
 
   ## Compute area of intersect
   inter_df_raw <- inter %>%
