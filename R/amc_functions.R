@@ -208,7 +208,8 @@ amc_create_amc <- function(df_overlap,
                            ref_period){
 
   all_shps <- do.call(rbind, shps) %>% st_as_sf() %>%
-    mutate(period_id = paste0(.data[[period_var]], "_", .data[[id_unit_var]]))
+    mutate(period_id = paste0(.data[[period_var]], "_", .data[[id_unit_var]]))  %>%
+    select(period_id, all_of(c(period_var, id_unit_var)))
 
   df_overlap_add_group <- amc_get_clusters(df_overlap, threshold) %>%
     select(row_a, row_b, group, group_N)  %>%
